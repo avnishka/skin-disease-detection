@@ -4,9 +4,8 @@ from fastapi import FastAPI, UploadFile, File, HTTPException, status
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from .models import DiagnosisResponse, ErrorResponse
-from .ollama_client import OllamaClient
-from .huggingface_client import HuggingFaceClient
+from models import DiagnosisResponse, ErrorResponse
+from ollama_client import OllamaClient
 import logging
 from typing import Union
 
@@ -15,10 +14,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # --- AI Backend Configuration ---
-# Change this to "HUGGINGFACE" to use the Hugging Face API
-# AI_BACKEND = "OLLAMA"
-
-AI_BACKEND = "HUGGINGFACE"
+# Only Ollama is supported now
+AI_BACKEND = "OLLAMA"
 
 # File validation settings
 ALLOWED_CONTENT_TYPES = ["image/jpeg", "image/png", "image/webp"]
@@ -44,10 +41,8 @@ def get_ai_client():
     """Factory function to get the appropriate AI client."""
     if AI_BACKEND == "OLLAMA":
         return OllamaClient()
-    elif AI_BACKEND == "HUGGINGFACE":
-        return HuggingFaceClient()
     else:
-        raise ValueError(f"Invalid AI_BACKEND: {AI_BACKEND}")
+        raise ValueError(f"Invalid AI_BACKEND: {AI_BACKEND}. Only OLLAMA is supported.")
 
 # Initialize a single, reusable instance of the AI client
 try:
@@ -62,7 +57,7 @@ except Exception as e:
 @app.get("/", include_in_schema=False)
 async def root():
     """Serves the main HTML page."""
-    return FileResponse("src/skin_checker/index.html")
+    return FileResponse("index.html")
 
 @app.get("/health")
 async def health_check():
@@ -137,6 +132,6 @@ async def diagnose_skin(
         )
 
 if __name__ == "__main__":
-    # This part runs if you were to execute `python src/skin_checker/app.py`
-    # but we are using uvicorn directly.
-    uvicorn.run("skin_checker.app:app", host="127.0.0.1", port=8000, reload=True, app_dir="src")
+    # This part runs if you were to execute `python app.py`
+    # Run the FastAPI app directly
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)

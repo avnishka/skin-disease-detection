@@ -279,8 +279,7 @@
         function showResults(data) {
             if (data) {
                 // Populate the results fields
-                document.getElementw
-                ById('res-status').textContent = data.status;
+                document.getElementById('res-status').textContent = data.status;
                 document.getElementById('res-conf').textContent = `${(data.confidence * 100).toFixed(0)}%`;
                 document.getElementById('res-disease').textContent = data.disease || 'None';
                 document.getElementById('res-dconf').textContent = `${(data.disease_confidence * 100).toFixed(0)}%`;
