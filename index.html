@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Disease Checker</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: grid;
+            place-items: center;
+            min-height: 90vh;
+            /* Light pink to light yellow gradient background */
+            background: linear-gradient(135deg, #fff0f3 0%, #fffde7 100%);
+            color: #333;
+            margin: 0;
+            overflow: hidden; /* Hide scrollbars from floating elements */
+        }
+        
+        /* --- Floating Images Animation --- */
+        .floating-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none; /* Allows clicking through */
+        }
+
+        .floating-container img {
+            position: absolute;
+            bottom: -100px; /* Start below the viewport */
+            width: 60px; /* Size of the floating images */
+            height: 60px;
+            object-fit: contain;
+            opacity: 0.2; /* Semi-transparent */
+            animation: float-image 15s linear infinite;
+        }
+
+        /* Stagger animations for a random feel */
+        .floating-container img:nth-child(1) { left: 10%; animation-duration: 18s; animation-delay: -10s; width: 70px; height: 70px;}
+        .floating-container img:nth-child(2) { left: 30%; animation-duration: 14s; animation-delay: -5s; opacity: 0.15; }
+        .floating-container img:nth-child(3) { left: 50%; animation-duration: 20s; animation-delay: -15s; width: 80px; height: 80px;}
+        .floating-container img:nth-child(4) { left: 70%; animation-duration: 12s; animation-delay: -3s; opacity: 0.25; }
+        .floating-container img:nth-child(5) { left: 85%; animation-duration: 17s; animation-delay: -7s; width: 65px; height: 65px;}
+        .floating-container img:nth-child(6) { left: 5%; animation-duration: 16s; animation-delay: -2s; opacity: 0.18; }
+        .floating-container img:nth-child(7) { left: 20%; animation-duration: 19s; animation-delay: -8s; width: 75px; height: 75px;}
+        .floating-container img:nth-child(8) { left: 60%; animation-duration: 13s; animation-delay: -12s; opacity: 0.22; }
+
+
+        @keyframes float-image {
+            0% {
+                transform: translateY(0) scale(0.8) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.2; /* Adjusted for image opacity */
+            }
+            90% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(-110vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        /* --- End Animation --- */
+
+
+        main {
+            width: 90%;
+            max-width: 500px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            text-align: center;
+            position: relative; /* Bring main card above background */
+            z-index: 1;
+        }
+        h1 {
+            color: #111;
+            margin-top: 0;
+        }
+        #upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        input[type="file"] {
+            padding: 10px;
+            border: 2px dashed #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        input[type="file"]::file-selector-button {
+            /* New pink color */
+            background-color: #ff80ab;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button {
+            /* New pink color */
+            background-color: #ff80ab;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+        button:hover:not(:disabled) {
+            /* Darker pink */
+            background-color: #e07099;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            /* New pink loader */
+            border-top: 4px solid #ff80ab;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #results, #error {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 6px;
+            text-align: left;
+        }
+        #error {
+            background-color: #ffebee;
+            color: #b71c1c;
+            border: 1px solid #ffcdd2;
+        }
+        #results {
+            /* Light yellow for healthy */
+            background-color: #fffde7;
+            border: 1px solid #fff9c4;
+            color: #f57f17;
+        }
+        #results.unhealthy {
+             /* Light pink for unhealthy */
+             background-color: #fff0f3;
+             border-color: #fce4ec;
+             color: #c2185b;
+        }
+        #results p { margin: 0.5rem 0; }
+        #results p strong {
+            text-transform: capitalize;
+            min-width: 100px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    
+    <!-- 
+      These are placeholder images from a free icon library. 
+      You can replace the 'src' with your own image URLs!
+    -->
+    <div class="floating-container">
+        <img src="https://img.icons8.com/ios/100/null/skin.png" alt="skin icon">
+        <img src="https://img.icons8.com/ios/100/null/band-aid.png" alt="band-aid icon">
+        <img src="https://img.icons8.com/ios/100/null/virus.png" alt="virus icon">
+        <img src="https://img.icons8.com/ios/100/null/dermatology.png" alt="dermatology icon">
+        <img src="https://img.icons8.com/ios/100/null/acne.png" alt="acne icon">
+        <img src="https://img.icons8.com/ios/100/null/cream.png" alt="cream icon">
+        <img src="https://img.icons8.com/ios/100/null/skin-cancer.png" alt="skin cancer icon">
+        <img src="https://img.icons8.com/ios/100/null/allergy.png" alt="allergy icon">
+    </div>
+
+    <main>
+        <h1>Skin Disease Checker 🔬</h1>
+        <p>Upload an image for an AI-powered analysis.</p>
+
+        <form id="upload-form">
+            <input type="file" id="file-input" accept="image/png, image/jpeg, image/webp" required>
+            <button type="submit" id="submit-button">Diagnose</button>
+        </form>
+
+        <div id="loader" class="loader" style="display: none;"></div>
+        <div id="error" style="display: none;"></div>
+
+        <div id="results" style="display: none;">
+            <h3>Analysis Results</h3>
+            <p><strong id="res-status-label">Status:</strong> <span id="res-status"></span></p>
+            <p><strong id="res-conf-label">Confidence:</strong> <span id="res-conf"></span></p>
+            <p><strong id="res-disease-label">Disease:</strong> <span id="res-disease"></span></p>
+            <p><strong id="res-dconf-label">D. Confidence:</strong> <span id="res-dconf"></span></p>
+        </div>
+    </main>
+
+    <script>
+        // Get all the elements we need
+        const uploadForm = document.getElementById('upload-form');
+        const fileInput = document.getElementById('file-input');
+        const submitButton = document.getElementById('submit-button');
+        const loader = document.getElementById('loader');
+        const errorDisplay = document.getElementById('error');
+        const resultsDisplay = document.getElementById('results');
+
+        // Handle the form submission
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Stop the form from reloading the page
+
+            const file = fileInput.files[0];
+            if (!file) {
+                showError("Please select a file first.");
+                return;
+            }
+
+            // Create form data to send
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Reset UI
+            showLoading(true);
+            showError(null);
+            showResults(null);
+
+            try {
+                // Send the request to the FastAPI backend
+                const response = await fetch('http://127.0.0.1:8000/diagnose', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    // Handle HTTP errors (like 422, 500)
+                    const errData = await response.json();
+                    throw new Error(errData.detail || "An unknown error occurred.");
+                }
+
+                // Show the successful response
+                const data = await response.json();
+                showResults(data);
+
+            } catch (err) {
+                // Show network or parsing errors
+                showError(err.message);
+            } finally {
+                // Always hide the loader
+                showLoading(false);
+            }
+        });
+
+        function showLoading(isLoading) {
+            loader.style.display = isLoading ? 'block' : 'none';
+            submitButton.disabled = isLoading;
+        }
+
+        function showError(message) {
+            if (message) {
+                errorDisplay.textContent = message;
+                errorDisplay.style.display = 'block';
+            } else {
+                errorDisplay.style.display = 'none';
+            }
+        }
+
+        function showResults(data) {
+            if (data) {
+                // Populate the results fields
+                document.getElementw
+                ById('res-status').textContent = data.status;
+                document.getElementById('res-conf').textContent = `${(data.confidence * 100).toFixed(0)}%`;
+                document.getElementById('res-disease').textContent = data.disease || 'None';
+                document.getElementById('res-dconf').textContent = `${(data.disease_confidence * 100).toFixed(0)}%`;
+
+                // Style the results box
+                resultsDisplay.className = data.status.toLowerCase();
+                
+                // Hide/show disease fields
+                const showDisease = data.status.toLowerCase() === 'unhealthy';
+                document.getElementById('res-disease-label').style.display = showDisease ? 'inline-block' : 'none';
+                document.getElementById('res-disease').style.display = showDisease ? 'inline' : 'none';
+                document.getElementById('res-dconf-label').style.display = showDisease ? 'inline-block' : 'none';
+                document.getElementById('res-dconf').style.display = showDisease ? 'inline' : 'none';
+
+                resultsDisplay.style.display = 'block';
+            } else {
+                resultsDisplay.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+</html>
