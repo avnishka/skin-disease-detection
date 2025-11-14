@@ -4,7 +4,7 @@ dev-dependencies = []
 [project]
 name = "skin-disease-detection"
 version = "0.1.0"
-description = "AI-powered skin disease detection web application"
+description = "AI-powered skin disease detection web application using Fireworks AI"
 requires-python = ">=3.9"
 dependencies = [
     "fastapi>=0.104.0",

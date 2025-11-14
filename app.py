@@ -5,17 +5,22 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from models import DiagnosisResponse, ErrorResponse
-from ollama_client import OllamaClient
+from fireworks_client import FireworksClient
 import logging
 from typing import Union
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 # --- Configuration ---
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # --- AI Backend Configuration ---
-# Only Ollama is supported now
-AI_BACKEND = "OLLAMA"
+# Fireworks AI is used for vision analysis
+AI_BACKEND = "FIREWORKS"
 
 # File validation settings
 ALLOWED_CONTENT_TYPES = ["image/jpeg", "image/png", "image/webp"]
@@ -39,10 +44,12 @@ app.add_middleware(
 
 def get_ai_client():
     """Factory function to get the appropriate AI client."""
-    if AI_BACKEND == "OLLAMA":
-        return OllamaClient()
+    if AI_BACKEND == "FIREWORKS":
+        return FireworksClient()
     else:
-        raise ValueError(f"Invalid AI_BACKEND: {AI_BACKEND}. Only OLLAMA is supported.")
+        raise ValueError(
+            f"Invalid AI_BACKEND: {AI_BACKEND}. Only FIREWORKS is supported."
+        )
 
 # Initialize a single, reusable instance of the AI client
 try:

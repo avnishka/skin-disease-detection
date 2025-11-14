@@ -1,5 +1,5 @@
 # Copy this file to .env and fill in your actual values
 
-# HuggingFace API Token - Get this from https://huggingface.co/settings/tokens
-# Make sure to use a "Read" token with access to the models you need
-HUGGINGFACE_ACCESS_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# Fireworks AI API Key - Get this from https://fireworks.ai/
+# Required for the vision model to analyze skin images
+FIREWORKS_API_KEY=fw_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

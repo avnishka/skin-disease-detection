@@ -1,18 +1,20 @@
 # Skin Disease Detection
 
-AI-powered skin disease detection web application using FastAPI and Ollama vision models.
+AI-powered skin disease detection web application using **Fireworks AI** and FastAPI.
+
+**Default AI Backend: Fireworks AI** - No local model installation required, just add your API key!
 
 ## Setup
 
 ### Quick Setup (Recommended)
 Use the provided Makefile for easy setup:
 ```bash
-# Full setup (dependencies + Ollama model)
+# Full setup (dependencies + environment setup)
 make setup
 
 # Or install components separately:
 make install-deps  # Install Python dependencies
-make install-model # Pull the Qwen3-VL-2B model
+make setup-env     # Setup environment variables (.env file)
 ```
 
 ### Manual Setup
@@ -21,31 +23,30 @@ make install-model # Pull the Qwen3-VL-2B model
    uv sync
    ```
 
-2. Install and set up Ollama:
+2. Set up Fireworks AI API:
    ```bash
-   # Install Ollama from: https://ollama.ai/
+   # Copy the example environment file
+   cp env_example.txt .env
 
-   # Pull the Qwen3-VL-2B vision model specifically for image analysis:
-   ollama pull qwen3-vl:2b
-
-   # Verify the model is available:
-   ollama list
+   # Edit .env and add your Fireworks API key from https://fireworks.ai/
+   # Replace 'your_fireworks_api_key_here' with your actual API key
    ```
 
-   The app is configured to use Ollama with the `qwen3-vl:2b` vision model for image analysis.
+   The app uses **Fireworks AI** with advanced vision models:
+   - **Vision Model** (`qwen3-vl-30b-a3b-thinking`): Analyzes skin images using advanced computer vision
+   - **Note:** Images are processed locally and sent as data URLs to Fireworks API
 
 3. Run the application:
    ```bash
-   make run
-   # Or manually: uv run python app.py
+   uv run python app.py
    ```
 
 4. Open http://127.0.0.1:8000 in your browser
 
 ### Makefile Commands
-- `make setup` - Complete setup (dependencies + model)
+- `make setup` - Complete setup (dependencies + environment variables)
 - `make install-deps` - Install Python dependencies only
-- `make install-model` - Pull Qwen3-VL-2B model only
+- `make setup-env` - Setup environment variables (.env file)
 - `make run` - Start the FastAPI application
 - `make clean` - Remove cache files
 - `make help` - Show all available commands
@@ -53,7 +54,8 @@ make install-model # Pull the Qwen3-VL-2B model
 ## Features
 
 - Upload skin images for AI analysis
-- Uses Qwen3-VL-2B vision model for accurate image understanding
+- **Powered by Fireworks AI** with state-of-the-art vision models
+- Uses Qwen3-VL-30B-A3B-Thinking model for accurate skin condition analysis
 - Returns structured diagnosis with confidence scores
 - FastAPI backend with modern web interface
 - Supports JPEG, PNG, and WebP images up to 10MB
