@@ -4,6 +4,18 @@ AI-powered skin disease detection web application using FastAPI and Ollama visio
 
 ## Setup
 
+### Quick Setup (Recommended)
+Use the provided Makefile for easy setup:
+```bash
+# Full setup (dependencies + Ollama model)
+make setup
+
+# Or install components separately:
+make install-deps  # Install Python dependencies
+make install-model # Pull the Qwen3-VL-2B model
+```
+
+### Manual Setup
 1. Install dependencies:
    ```bash
    uv sync
@@ -24,10 +36,19 @@ AI-powered skin disease detection web application using FastAPI and Ollama visio
 
 3. Run the application:
    ```bash
-   uv run python app.py
+   make run
+   # Or manually: uv run python app.py
    ```
 
 4. Open http://127.0.0.1:8000 in your browser
+
+### Makefile Commands
+- `make setup` - Complete setup (dependencies + model)
+- `make install-deps` - Install Python dependencies only
+- `make install-model` - Pull Qwen3-VL-2B model only
+- `make run` - Start the FastAPI application
+- `make clean` - Remove cache files
+- `make help` - Show all available commands
 
 ## Features
 
